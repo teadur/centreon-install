@@ -77,7 +77,7 @@ RELEASE=`lsb_release -c -s`
 
 apt-get install -y lsb-release python-software-properties
 
-MIRROR_DOMAIN='ftp.igh.cnrs.fr'
+MIRROR_DOMAIN='ftp.eenet.ee'
 apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xcbcb082a1bb943db
 add-apt-repository "deb http://${MIRROR_DOMAIN}/pub/mariadb/repo/${MARIADB_VER}/${DISTRO} ${RELEASE} main"
 apt-get update
@@ -106,8 +106,8 @@ echo "
 ======================================================================
 "
 
-echo 'deb http://ftp.fr.debian.org/debian/ squeeze main non-free
-deb-src http://ftp.fr.debian.org/debian/ squeeze main non-free
+echo 'deb http://ftp.ee.debian.org/debian/ squeeze main non-free
+deb-src http://ftp.ee.debian.org/debian/ squeeze main non-free
 
 deb http://security.debian.org/ squeeze/updates main non-free
 deb-src http://security.debian.org/ squeeze/updates main non-free' > /etc/apt/sources.list.d/squeeze.list
