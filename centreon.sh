@@ -11,7 +11,7 @@ CONNECTOR_VER="1.1.1"
 ENGINE_VER="1.4.8"
 PLUGIN_VER="2.0.3"
 BROKER_VER="2.6.3"
-CENTREON_VER="2.5.2"
+CENTREON_VER="2.5.3"
 CLAPI_VER="1.6.1"
 # MariaDB Series
 MARIADB_VER='5.5'
@@ -21,7 +21,7 @@ CONNECTOR_URL="http://download.centreon.com/index.php?id=4601"
 ENGINE_URL="http://download.centreon.com/index.php?id=4599"
 PLUGIN_URL="http://www.nagios-plugins.org/download/nagios-plugins-${PLUGIN_VER}.tar.gz"
 BROKER_URL="http://download.centreon.com/index.php?id=4323"
-CENTREON_URL="http://download.centreon.com/index.php?id=4320"
+CENTREON_URL="http://download.centreon.com/index.php?id=4602"
 CLAPI_URL="http://download.centreon.com/index.php?id=4596"
 ## Sources widgets
 WIDGET_VER="1.0.0"
