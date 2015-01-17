@@ -3,15 +3,20 @@
 # Source https://github.com/zeysh/centreon-install
 # Thanks to Eric http://eric.coquard.free.fr
 #
-
+export DEBIAN_FRONTEND=noninteractive
 # Variables
 ## Versions
 CLIB_VER="1.4.2"
 CONNECTOR_VER="1.1.1"
 ENGINE_VER="1.4.8"
 PLUGIN_VER="2.0.3"
+<<<<<<< HEAD
 BROKER_VER="2.6.3"
 CENTREON_VER="2.5.3"
+=======
+BROKER_VER="2.7.0"
+CENTREON_VER="2.5.4"
+>>>>>>> upstream/master
 CLAPI_VER="1.6.1"
 # MariaDB Series
 MARIADB_VER='5.5'
@@ -20,14 +25,19 @@ CLIB_URL="http://download.centreon.com/index.php?id=4600"
 CONNECTOR_URL="http://download.centreon.com/index.php?id=4601"
 ENGINE_URL="http://download.centreon.com/index.php?id=4599"
 PLUGIN_URL="http://www.nagios-plugins.org/download/nagios-plugins-${PLUGIN_VER}.tar.gz"
+<<<<<<< HEAD
 BROKER_URL="http://download.centreon.com/index.php?id=4323"
 CENTREON_URL="http://download.centreon.com/index.php?id=4602"
+=======
+BROKER_URL="http://download.centreon.com/index.php?id=4608"
+CENTREON_URL="http://download.centreon.com/index.php?id=4607"
+>>>>>>> upstream/master
 CLAPI_URL="http://download.centreon.com/index.php?id=4596"
 ## Sources widgets
 WIDGET_VER="1.0.0"
-WIDGET_HOST_VER="1.1.2"
+WIDGET_HOST_VER="1.2.1"
 WIDGET_HOSTGROUP_VER="1.1.1"
-WIDGET_SERVICE_VER="1.1.2"
+WIDGET_SERVICE_VER="1.2.1"
 WIDGET_SERVICEGROUP_VER="1.1.0"
 WIDGET="https://forge.centreon.com/attachments/download/1508/centreon-widgets-${WIDGET_VER}.tar.gz"
 WIDGET_HOST="http://download.centreon.com/centreon-widgets/centreon-widget-host-monitoring/centreon-widget-host-monitoring-${WIDGET_HOST_VER}.tar.gz"
@@ -72,10 +82,10 @@ echo "
 
 ======================================================================
 "
+apt-get install -y lsb-release python-software-properties
 DISTRO=`lsb_release -i -s | tr '[:upper:]' '[:lower:]'`
 RELEASE=`lsb_release -c -s`
 
-apt-get install -y lsb-release python-software-properties
 
 MIRROR_DOMAIN='ftp.eenet.ee'
 apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xcbcb082a1bb943db
@@ -96,7 +106,7 @@ debconf-set-selections <<< "mariadb-server-${MARIADB_VER} mysql-server/root_pass
 apt-get install --force-yes -y mariadb-server
 }
 
-function php3_install () {
+function php53_install () {
 echo "
 ======================================================================
 
@@ -316,8 +326,8 @@ apt-get install -y librrd-dev libqt4-dev libqt4-sql-mysql
 apt-get clean
 
 cd ${DL_DIR}
-if [[ -e centreon-broker-2.5.0.tar.gz ]]
-  then
+if [[ -e centreon-broker-${BROKER_VER}.tar.gz ]]
+  then 
     echo 'File already exist !'
   else
     wget ${BROKER_URL} -O ${DL_DIR}/centreon-broker-${BROKER_VER}.tar.gz
@@ -560,6 +570,27 @@ cd ${DL_DIR}
   wget -qO- ${WIDGET_SERVICEGROUP} | tar -C ${INSTALL_DIR}/centreon/www/widgets -xzv
 }
 
+function centreon_plugins_install() {
+echo "
+=======================================================================
+
+                    Install Centreon Plugins
+
+=======================================================================
+"
+cd ${DL_DIR}
+apt-get install libcache-memcached-perl libjson-perl libxml-libxml-perl libdatetime-perl git-core
+git clone http://git.centreon.com/centreon-plugins.git
+cd centreon-plugins
+chmod +x centreon_plugins.pl
+chown -R ${ENGINE_USER}:${ENGINE_GROUP} ${DL_DIR}/centreon-plugins
+cp -R * ${INSTALL_DIR}/centreon-plugins/libexec/
+}
+
+
+
+
+
 function main () {
 echo "
 =======================| Install details |============================
@@ -586,12 +617,12 @@ if [[ $? -ne 0 ]];
     echo -e "${bold}Step1${normal}  => Install MariaDB                                       ${STATUS_OK}"
 fi
 
-php3_install >> ${INSTALL_LOG} 2>&1
+php53_install >> ${INSTALL_LOG} 2>&1
 if [[ $? -ne 0 ]];
   then
-    echo -e "${bold}Step2${normal}  => Install PHP3 on Wheezy                                ${STATUS_FAIL}"
+    echo -e "${bold}Step2${normal}  => Install PHP5.3 on Wheezy                              ${STATUS_FAIL}"
   else
-    echo -e "${bold}Step2${normal}  => Install PHP3 on Wheezy                                ${STATUS_OK}"
+    echo -e "${bold}Step2${normal}  => Install PHP5.3 on Wheezy                              ${STATUS_OK}"
 fi
 clib_install >> ${INSTALL_LOG} 2>&1
 if [[ $? -ne 0 ]];
@@ -620,6 +651,13 @@ if [[ $? -ne 0 ]];
     echo -e "${bold}Step6${normal}  => Nagios plugins install                                ${STATUS_FAIL}"
   else
     echo -e "${bold}Step6${normal}  => Nagios plugins install                                ${STATUS_OK}"
+fi
+centreon_plugins_install >> ${INSTALL_LOG} 2>&1
+if [[ $? -ne 0 ]];
+  then
+    echo -e "${bold}Step6${normal}  => Centreon plugins install                              ${STATUS_FAIL}"
+  else
+    echo -e "${bold}Step6${normal}  => Centreon plugins install                              ${STATUS_OK}"
 fi
 centreon_broker_install >> ${INSTALL_LOG} 2>&1
 if [[ $? -ne 0 ]];
